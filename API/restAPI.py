@@ -10,7 +10,7 @@ import pika
 import hashlib
 import time 
 
-myclient = pymongo.MongoClient("mongodb+srv://admin:Ca$hc0w1@cluster0-q2l6k.gcp.mongodb.net/test?retryWrites=true&w=majority")
+myclient = pymongo.MongoClient("mongodb+srv://admin:password@cluster0-q2l6k.gcp.mongodb.net/test?retryWrites=true&w=majority")
 mydb = myclient["PARKING"]
 bookings = mydb["BOOKINGS"]
 entryDetails = mydb["ENTRY"]
