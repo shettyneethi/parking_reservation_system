@@ -10,7 +10,7 @@ class App extends Component {
     return (
       <div>
         <div id="app">
-            <Header />
+          <Header />
         </div>    
         <div id="table">
           <Table />
