@@ -10,13 +10,11 @@ class Form extends Component {
             <h4 align="center">Amount per hour: $1.00</h4>
             Date: <input type="date" name="pickDate"/><br/><br/>
             Start time: <select name="pickTime">
-                    <option name="1:30 PM">1:30 PM</option>
-                    <option name="2:30 PM">2:30 PM</option>
-                    <option name="3:30 PM">3:30 PM</option>
-                    <option name="4:30 PM">4:30 PM</option>
-                    <option name="5:30 PM">5:30 PM</option>
-                </select><br/><br/>
-            Hours: <input type="float" name="enterHours"/><br/><br/>
+                          <option name="5:00 AM">5:00 PM</option>
+                        </select><br/><br/>
+            Hours: <select name="pickEnd">
+                    <option name="7:00 AM">7:00 PM</option>
+                  </select><br/><br/>
             License plate: <input type="string" name="enterPlate"/><br/><br/>
             <input type="submit" name="submit" value="Submit"/>
         </form>

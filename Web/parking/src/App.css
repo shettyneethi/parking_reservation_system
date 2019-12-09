@@ -46,3 +46,12 @@ th{
   margin: 600px 0 0 150px;
   position: absolute;
 }
+
+.entryform{
+  background-color: black;
+  width: 80%;
+  height: 300px;
+  color: white;
+  margin: 600px 0 0 150px;
+  position: absolute;
+}
