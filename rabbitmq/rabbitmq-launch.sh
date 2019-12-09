@@ -1,0 +1,1 @@
+gcloud compute instances create rabbitmq --tags=default-allow-internal --image-family ubuntu-1804-lts --image-project gce-uefi-images --network-interface=no-address --metadata-from-file startup-script=rabbitmq-install.sh
