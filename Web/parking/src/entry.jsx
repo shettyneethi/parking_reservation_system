@@ -37,9 +37,10 @@ class EntryForm extends Component {
         <form class="entry">
             
             <h1 align="center">REGISTER ENTRY</h1>
-            <label>Date:</label> <input type="date" name="pickDate"/>
-            <label>Time:</label> <input name='time' value={this.state.time} onChange={e => this.handleChange(e)}/><br></br>
-            <button type="button" onClick={this.handleSubmit}>Submit</button>
+            <label>Date:</label> <input type="date" name="pickDate"/><br></br><br></br>
+            <label>Time:</label> <input name='time' value={this.state.time} onChange={e => this.handleChange(e)}/><br></br><br></br>
+            Upload image: <input type="file" name="pic" accept="image/*"></input><br></br><br></br>
+            <button type="button" onClick={this.handleSubmit}>Submit</button><br></br><br></br>
             <h3 align="center" style={{ color: 'red' }}>{this.state.message} </h3>
         </form>
     );
