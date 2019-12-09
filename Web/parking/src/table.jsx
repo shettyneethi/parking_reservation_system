@@ -2,7 +2,53 @@ import React from 'react';
 import './table.css'
 
 class Table extends React.Component {
+  constructor(){
+    super();
 
+    this.state = {
+        green: true,
+        class1: "available",
+        class : "available",
+        start_time : "",
+        end_time :"",
+        message : ""
+    }
+
+  }
+  handleClick1 = () => {
+  if(this.state.class1 == "available"){
+    this.setState({
+        class1: "selected",
+        start_time : "5:00 AM"
+      });
+      }else{
+      this.setState({
+        class1: "available"
+      });
+      }
+  
+  }
+  handleSubmit= () => {
+  this.setState({
+        class1: "booked",
+        class : "booked",
+        message : "Successfully booked lot for the given license plate for given time!!"
+      });
+  
+  }
+  handleClick= () => {
+  if(this.state.class == "available"){
+    this.setState({
+        class: "selected",
+        end_time : " 8:00 AM"
+      });
+      }else{
+      this.setState({
+        class: "available"
+      });
+      }
+  
+  }
   createTable = () => {
     let table = []
     let response = {1:{5.5:6,7:7.5},
@@ -46,30 +92,9 @@ class Table extends React.Component {
   return table
   }
 
-  constructor(){
-    super();
 
-    this.state = {
-        green: true,
-        status: "available"
-    }
-    this.handleClick = this.handleClick.bind(this);
-  }
 
-  handleClick = () => {
-    if(this.state.status == "available"){
-      console.log("entered toggle yellow")
-      this.setState(state => ({
-        status: "selected"
-      }));
-    }else{
-      console.log("entered toggle green")
-      this.setState(state => ({
-        status: "available"
-      }));
-    }
-    
-  }
+  
 
   changeColor(){
       this.setState({green: !this.state.green})
@@ -79,6 +104,7 @@ class Table extends React.Component {
     let btn_class = this.state.green ? "selected" : "available";
 
     return(
+    <div>
         <div class="reservation">
             <h1 align="center">PICK DESIRED SLOT</h1>
             <table>
@@ -115,33 +141,54 @@ class Table extends React.Component {
                 </tr>
                 <tr>
                   <td>1</td>
-                  <td><button type="button" className={this.state.status} onclick={this.handleClick}>&#x2713;</button></td>
+                  <td><button type="button" className={this.state.class1} onClick={this.handleClick1}>&#x2713;</button></td>
+                  <td><button type="button" className={this.state.class} onClick={this.handleClick}>&#x2713;</button></td>
+                  <td><button type="button" className={this.state.class} onClick={this.handleClick}>&#x2713;</button></td>
+                  <td><button type="button" className={this.state.class} onClick={this.handleClick}>&#x2713;</button></td>
+                  <td><button type="button" className={this.state.class} onClick={this.handleClick}>&#x2713;</button></td>
+                  <td><button type="button" className={this.state.class} onClick={this.handleClick}>&#x2713;</button></td>
+                  <td><button type="button" className="booked">x</button></td>
+                  <td><button type="button" className="booked">x</button></td>
+                  <td><button type="button" className="booked">x</button></td>
+                  <td><button type="button" className="booked">x</button></td>
+                  <td><button type="button" className="booked">x</button></td>
                   <td><button type="button" className="available">&#x2713;</button></td>
                   <td><button type="button" className="available">&#x2713;</button></td>
                   <td><button type="button" className="available">&#x2713;</button></td>
+                  <td><button type="button" className="booked">x</button></td>
+                  <td><button type="button" className="booked">x</button></td>
+                  <td><button type="button" className="booked">x</button></td>
                   <td><button type="button" className="available">&#x2713;</button></td>
                   <td><button type="button" className="available">&#x2713;</button></td>
                   <td><button type="button" className="available">&#x2713;</button></td>
-                  <td><button type="button" className="available">&#x2713;</button></td>
-                  <td><button type="button" className="available">&#x2713;</button></td>
-                  <td><button type="button" className="available">&#x2713;</button></td>
-                  <td><button type="button" className="available">&#x2713;</button></td>
-                  <td><button type="button" className="available">&#x2713;</button></td>
-                  <td><button type="button" className="available">&#x2713;</button></td>
-                  <td><button type="button" className="available">&#x2713;</button></td>
-                  <td><button type="button" className="available">&#x2713;</button></td>
-                  <td><button type="button" className="available">&#x2713;</button></td>
-                  <td><button type="button" className="available">&#x2713;</button></td>
-                  <td><button type="button" className="available">&#x2713;</button></td>
-                  <td><button type="button" className="available">&#x2713;</button></td>
-                  <td><button type="button" className="available">&#x2713;</button></td>
-                  <td><button type="button" className="available">&#x2713;</button></td>
-                  <td><button type="button" className="available">&#x2713;</button></td>
-                  <td><button type="button" className="available">&#x2713;</button></td>
-                  <td><button type="button" className="available">&#x2713;</button></td>
+                  <td><button type="button" className="booked">x</button></td>
+                  <td><button type="button" className="booked">x</button></td>
+                  <td><button type="button" className="booked">x</button></td>
+                  <td><button type="button" className="booked">x</button></td>
+
                 </tr>
                 {this.createTable()}
             </table>
+        </div>
+        
+        <div id="booking-form">
+
+         <form class="resform">
+         <h3 align="center" style={{ color: 'red' }}>{this.state.message}</h3>
+            <h1 align="center">RESERVATION FORM</h1>
+            <h4 align="center">Amount per hour: $1.00</h4>
+            Date: <input type="text" placeholder="12/09/2019" name="pickDate"></input><br/><br/>
+            Start time: <select name="pickTime">
+                          <option name="5:00 AM">{this.state.start_time}</option>
+                        </select><br/><br/>
+            end time: <select name="pickEnd">
+                    <option name="7:00 AM">{this.state.end_time}</option>
+                  </select><br/><br/>
+            License plate: <input type="string" name="enterPlate"/><br/><br/>
+           <button type="button" onClick={this.handleSubmit}>Submit</button>
+        </form>
+        
+        </div>
         </div>
     )
   }

@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import Header from './header.js';
-import Table from './table.js';
+import Table from './table.jsx';
 import Form from './form.js';
-import EntryForm from './entry.js';
-import ExitForm from './exit.js'
+import EntryForm from './entry.jsx';
+import ExitForm from './exit.jsx'
 
 import './App.css';
 
@@ -16,10 +16,6 @@ class App extends Component {
         </div>    
         <div id="table">
           <Table />
-        </div>
-        <br></br>
-        <div id="booking-form">
-          <Form />
         </div>
         <div id="entry-form">
           <EntryForm />
