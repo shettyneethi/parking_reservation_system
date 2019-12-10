@@ -38,7 +38,7 @@ channel.queue_bind(
 def callback(ch, method, properties, body):
 	print(" [x] received image %r" % (method.routing_key))
 	data = jsonpickle.decode(body)
-	
+	data["time"] = float(data["time"])
 	# convert the data to a PIL image type so we can extract dimensions
 	ioBuffer = io.BytesIO(data["img"])
 
@@ -56,7 +56,7 @@ def callback(ch, method, properties, body):
 		row = {
 			"license_plate" : license,
 			"date": data["date"],
-			"time": data["time"],
+			"time": str(data["time"]),
 			"checksum": data["hash"]
 		}
 		myquery = { "date": data["date"], "license_plate": license }
@@ -64,7 +64,7 @@ def callback(ch, method, properties, body):
 		result = {}
 		found = False
 		for i in query_res:
-			if(i["start_time"] <= data["time"] and i["end_time"] > data["time"]):
+			if(float(i["start_time"]) <= float(data["time"]) and float(i["end_time"]) > float(data["time"])):
 				found = True
 				row["booking_id"] = i["_id"]
 		if(found):
@@ -74,18 +74,20 @@ def callback(ch, method, properties, body):
 		row = {
 			"license_plate" : license,
 			"date": data["date"],
-			"time": data["time"],
+			"time": str(data["time"]),
 			"checksum": data["hash"],
 			"fine" : 0
 		}
 		myquery = { "date": data["date"], "license_plate": license }
 		query_res = entryDetails.find(myquery).sort("time", -1).limit(1)
 		
-		myquery = { "_id" : query_res["booking_id"]}
+		myquery = { "_id" : query_res[0]["booking_id"]}
 		query_res = bookings.find(myquery)
-		if(data["time"] > query_res[0]["end_time"]+0.05):
-			overTime  = math.ceil(data["time"] - query_res[0]["end_time"])
+		print(float(data["time"]) , (float(query_res[0]["end_time"])+0.05))
+		if(float(data["time"]) > (float(query_res[0]["end_time"])+0.05)):
+			overTime  = math.ceil(data["time"] - float(query_res[0]["end_time"]))
 			row["fine"] = overTime*40
+			print("fine : "+str(row["fine"] ))
 		exitDetails.insert_one(row)
 	print(routing_key_info+"worker DONE!")
 	

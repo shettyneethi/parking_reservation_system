@@ -89,33 +89,33 @@ def registerEntry(date,time):
     connection = pika.BlockingConnection(pika.ConnectionParameters(host='rabbitmq'))
     channel = connection.channel()
     response = {'message' : "FAILED"}
-    # try:
-    print("try")
-    channel.exchange_declare(exchange='toWorker', exchange_type='direct')
-    channel.exchange_declare(exchange='logs', exchange_type='topic')
+    try:
+        print("try")
+        channel.exchange_declare(exchange='toWorker', exchange_type='direct')
+        channel.exchange_declare(exchange='logs', exchange_type='topic')
 
-    channel.basic_publish(exchange='logs', routing_key=routing_key_info, body="Call to registerEntry Api made")
-    m = hashlib.md5()
-    m.update(request.data + str.encode(date) + str.encode(time))
-    checksum = m.hexdigest()
+        channel.basic_publish(exchange='logs', routing_key=routing_key_info, body="Call to registerEntry Api made")
+        m = hashlib.md5()
+        m.update(request.data + str.encode(date) + str.encode(time))
+        checksum = m.hexdigest()
 
-    message = {
-                "img":request.data,
-                "date":date,
-                "time":time,
-                "func" : "ENTRY",
-                "hash" : checksum
-    }
+        message = {
+                    "img":request.data,
+                    "date":date,
+                    "time":time,
+                    "func" : "ENTRY",
+                    "hash" : checksum
+        }
 
-    channel.basic_publish(exchange='toWorker',routing_key="**image",body=jsonpickle.encode(message))
-    channel.basic_publish(exchange='logs', routing_key=routing_key_debug, body="sent image to worker for entry registration.")
-    myquery = { "checksum": checksum, "date": date }
-    if(entryDetails.find(myquery).count() > 0):
-            response["message"] = "Successfully Registered entry"
-    else:
-            response["message"] = "No booking found for this Licence Plate for this date and time"
-    # except:
-        # channel.basic_publish(exchange='logs', routing_key=routing_key_debug, body="something failed")
+        channel.basic_publish(exchange='toWorker',routing_key="**image",body=jsonpickle.encode(message))
+        channel.basic_publish(exchange='logs', routing_key=routing_key_debug, body="sent image to worker for entry registration.")
+        myquery = { "checksum": str(checksum)}
+        if(entryDetails.find(myquery).count() > 0):
+                response["message"] = "Successfully Registered entry"
+        else:
+                response["message"] = "No booking found for this Licence Plate for this date and time"
+    except:
+        channel.basic_publish(exchange='logs', routing_key=routing_key_debug, body="something failed")
     #Encode response using jsonpickle
     response_pickled = jsonpickle.encode(response)
     channel.basic_publish(exchange='logs', routing_key=routing_key_info, body="RESULT"+response_pickled)
@@ -128,39 +128,39 @@ def registerExit(date,time):
     connection = pika.BlockingConnection(pika.ConnectionParameters(host='rabbitmq'))
     channel = connection.channel()
     response = {'message' : "FAILED"}
-    try:
-        channel.exchange_declare(exchange='toWorker', exchange_type='direct')
-        channel.exchange_declare(exchange='logs', exchange_type='topic')
+        try:
+            channel.exchange_declare(exchange='toWorker', exchange_type='direct')
+            channel.exchange_declare(exchange='logs', exchange_type='topic')
 
-        channel.basic_publish(exchange='logs', routing_key=routing_key_info, body="Call to registerExit Api made")
-        m = hashlib.md5()
-        m.update(request.data + str.encode(date) + str.encode(time))
-        checksum = m.hexdigest()
+            channel.basic_publish(exchange='logs', routing_key=routing_key_info, body="Call to registerExit Api made")
+            m = hashlib.md5()
+            m.update(request.data + str.encode(date) + str.encode(time))
+            checksum = m.hexdigest()
 
-        message = {
-                "img":request.data,
-                "date":date,
-                "time":time,
-                "func" : "EXIT",
-                "hash" : checksum
-            }
+            message = {
+                    "img":request.data,
+                    "date":date,
+                    "time":time,
+                    "func" : "EXIT",
+                    "hash" : checksum
+                }
 
-        channel.basic_publish(exchange='toWorker',routing_key="**image",body=jsonpickle.encode(message))
-        channel.basic_publish(exchange='logs', routing_key=routing_key_debug, body="sent image to worker for exit registration.")
-        myquery = { "hash": checksum, "date": date }
-        res = exitDetails.find(myquery)
-        if(exitDetails.find(myquery).count() > 0):
-            response["message"] = "SUCCESS"
-            response["fine"] = res[0]["fine"]
-        else:
-            response["message"] = "No booking found for this Licence Plate"
+            channel.basic_publish(exchange='toWorker',routing_key="**image",body=jsonpickle.encode(message))
+            channel.basic_publish(exchange='logs', routing_key=routing_key_debug, body="sent image to worker for exit registration.")
+            myquery = { 'checksum': str(checksum)}
+            res = exitDetails.find(myquery)
+            if(exitDetails.find(myquery).count() > 0):
+                response["message"] = "SUCCESS"
+                response["fine"] = res[0]["fine"]
+            else:
+                response["message"] = "No booking found for this Licence Plate. found entry :" + str(res.count())
     except:
         channel.basic_publish(exchange='logs', routing_key=routing_key_debug, body="something failed")
     #Encode response using jsonpickle
-    response_pickled = jsonpickle.encode(response)
-    channel.basic_publish(exchange='logs', routing_key=routing_key_info, body="RESULT"+response_pickled)
-    connection.close()
-    return Response(response=response_pickled, status=200, mimetype="application/json")
+        response_pickled = jsonpickle.encode(response)
+        channel.basic_publish(exchange='logs', routing_key=routing_key_info, body="RESULT"+response_pickled)
+        connection.close()
+        return Response(response=response_pickled, status=200, mimetype="application/json")
 
 # start flask app
 app.run(host="0.0.0.0", port=5000)
